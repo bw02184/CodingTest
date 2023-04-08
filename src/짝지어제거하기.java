@@ -1,15 +1,18 @@
+import java.util.*;
 class Solution
 {
     public int solution(String s)
     {
         int answer = -1;
-        while(true){
-            int bSize = s.length();
-            s=s.replaceAll("aa|bb|cc|dd|ee|ff|gg|hh|ii|jj|kk|ll|mm|nn|oo|pp|qq|rr|ss|tt|uu|vv|ww|xx|yy|zz","");
-            if(bSize ==s.length())break;
+        Stack<Character> stack = new Stack<>();
+        for(int i=0; i<s.length(); i++){
+            if(stack.isEmpty()) stack.push(s.charAt(i));
+            else if(stack.peek() == s.charAt(i))stack.pop();
+            else if(stack.peek() != s.charAt(i))stack.push(s.charAt(i));
+        }
+        if(stack.size() ==0)answer=1;
+        else answer=0;
 
-        }if(s.equals(""))answer = 1;
-    else answer = 0;
         return answer;
     }
 }
