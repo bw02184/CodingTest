@@ -1,17 +1,26 @@
+import java.util.HashMap;
 class Solution {
     public String[] solution(String[] players, String[] callings) {
-        String[] answer = {};
-        for(String s : callings){
-            int index = -1;
-            for(int i=0; i<players.length; i++){
-                if(players[i].equals(s)){
-                    index = i;
+        String[] answer = new String[players.length];
+        HashMap<String, Integer> map = new HashMap<>();
+        for (int i = 0; i < players.length; i++) {
+            map.put(players[i], i);
+        }
+        for (int i = 0; i < callings.length; i++) {
+            String findKey = "";
+            for (String key : map.keySet()) {
+                if (map.get(key) == map.get(callings[i]) - 1) {
+                    findKey = key;
                     break;
                 }
-            }String temp = players[index-1];
-            players[index-1] = s;
-            players[index] = temp;
+            }
+            map.put(findKey, map.get(findKey) + 1);
+            map.put(callings[i], map.get(callings[i]) - 1);
         }
-        return players;
+        int index = 0;
+        for (String key : map.keySet()) {
+            answer[map.get(key)] = key;
+        }
+        return answer;
     }
 }
