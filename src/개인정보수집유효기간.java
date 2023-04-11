@@ -1,52 +1,55 @@
-import java.util.Arrays;
-class Solution {
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+public class Solution {
+
+    private static final int YEAR = 12;
+    private static final int DAY = 28;
+
     public int[] solution(String today, String[] terms, String[] privacies) {
-        int[] answer = {};
-        String[] todays = today.split("\\.");
-        String index="";
-        for(int i=0; i<privacies.length; i++){
-            String[] expire = privacies[i].split("\\.| ");
-            //System.out.println(Arrays.toString(expire));
+        List<Integer> answer = new LinkedList<>();
 
-            String[] newExpire = makeExpired(expire,terms);
-            //System.out.println(Arrays.toString(newExpire));
-            boolean temp2 = isDeleted(newExpire, todays);
-            if(temp2){index +=i+1;
-                index += " ";
-            }
-            //System.out.println(temp2);
-            //System.out.println(Arrays.toString(expire));
+        Map<String, Integer> termMap = new HashMap<>();
+
+        for (String term : terms) {
+            String[] t = term.split(" ");
+            termMap.put(t[0], Integer.valueOf(t[1]));
         }
-        String[] temp3 = index.split(" ");
-        answer = Arrays.stream(temp3).mapToInt(Integer::parseInt).toArray();
 
-        //System.out.println(index);
-        return answer;
-    }
-    public String[] makeExpired(String[] expire, String[] terms){
-
-        for(String t : terms){
-            int term=0;
-            if(String.valueOf(t.charAt(0)).equals(expire[3]))  term = Integer.parseInt(t.split(" ")[1]);
-            if(Integer.parseInt(expire[1]) + term > 12){
-                expire[1] =""+(Integer.parseInt(expire[1]) + term - 12);
-                if(expire[1].length() ==1) expire[1] = "0"+expire[1];
-                expire[0] = ""+(Integer.parseInt(expire[0]) + 1);
-            }
-            else{
-                expire[1] =""+(Integer.parseInt(expire[1]) + term);
-                if(expire[1].length() ==1) expire[1] = "0"+expire[1];
+        for (int i = 0; i < privacies.length; i++) {
+            String privacy = privacies[i];
+            if (isFire(privacy, termMap, today)) {
+                answer.add(i + 1);
             }
         }
 
-        return expire;
+        return answer.stream().mapToInt(Integer::intValue).toArray();
     }
 
-    public boolean isDeleted(String[] newExpire, String[] todays){
-        int finalExpired = Integer.parseInt(newExpire[0]+newExpire[1]+newExpire[2]);
-        int finalTodays = Integer.parseInt(todays[0]+todays[1]+todays[2]);
-        if(finalExpired >finalTodays)
-            return false;
-        return true;
+    private boolean isFire(String privacy, Map<String, Integer> term, String today) {
+        String[] split = privacy.split(" ");
+        String date = split[0];
+        String type = split[1];
+        int days = getDays(date);
+        int fireDays = getFireDays(days, type, term);
+
+        return fireDays <= getDays(today);
     }
+
+    private int getDays(String date) {
+        String[] a = date.split("\\.");
+        int year = Integer.parseInt(a[0]);
+        int month = Integer.parseInt(a[1]);
+        int day = Integer.parseInt(a[2]);
+
+        return (year * YEAR * DAY) + (month * DAY) + day;
+    }
+
+    private int getFireDays(int days, String type, Map<String, Integer> term) {
+        int expirationDays = term.get(type) * DAY;
+        return days + expirationDays;
+    }
+
 }
