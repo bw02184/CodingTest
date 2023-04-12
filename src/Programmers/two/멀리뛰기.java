@@ -1,3 +1,5 @@
+package Programmers.two;
+
 class Solution {
     public static long solution(int n) {
         long[] d = new long[n + 1];

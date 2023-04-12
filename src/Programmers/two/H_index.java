@@ -1,3 +1,5 @@
+package Programmers.two;
+
 import java.util.Arrays;
 
 class Solution {

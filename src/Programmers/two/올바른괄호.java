@@ -1,3 +1,5 @@
+package Programmers.two;
+
 import java.util.*;
 class Solution {
     boolean solution(String s) {

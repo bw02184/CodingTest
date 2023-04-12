@@ -1,3 +1,5 @@
+package Programmers.two;
+
 class Solution {
     public double solution(int n) {
         int answer = 0;

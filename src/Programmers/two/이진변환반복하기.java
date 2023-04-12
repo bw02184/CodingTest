@@ -1,3 +1,5 @@
+package Programmers.two;
+
 class Solution {
     public int[] solution(String s) {
         int[] answer = new int[2];

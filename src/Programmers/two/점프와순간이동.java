@@ -1,3 +1,5 @@
+package Programmers.two;
+
 public class Solution {
     public int solution(int n) {
         int ans = 1;

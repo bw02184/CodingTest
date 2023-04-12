@@ -1,3 +1,5 @@
+package Programmers.one;
+
 import java.util.HashMap;
 class Solution {
     public int[] solution(String[] keymap, String[] targets) {
