@@ -1,43 +1,46 @@
 import java.util.*;
+
 class Solution {
+
     public int[] solution(String msg) {
-        int[] answer = {};
-        char a = 'A';
-        int index=1;
-        HashMap<String,Integer> map = new HashMap<>();
-        for(int i='A'; i<='Z'; i++){
-            map.put(String.valueOf((char)i),index++);
+        // A~Z 까지 모두 사전에 등록하기
+        String[] strArr = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+        HashMap<String, Integer> hashMap = new HashMap<>();
+        ArrayList<Integer> list = new ArrayList<>();
+
+        for (int i = 0; i < strArr.length; i++) {
+            hashMap.put(strArr[i], i + 1);
         }
+        // 재귀함수에 넣기
+        LZW(hashMap, list, msg);
 
-        List<Integer> list = new ArrayList<>();
-        String alpa = "";
-        int start=0, last=1;
-        String str = "", mapper="";
-        try{
-            while(last < msg.length()-1 && start < msg.length()-1){
-                str = ""+msg.charAt(start);
-                String nextStr = ""+msg.charAt(last);
-                mapper = str+nextStr;
-                //만약 map에 str키 값이 있으면 nextStr을 str에 더해 줘서 그 값을 키 값으로 넣음 만약 키 값이 넣어지면 start++ 안넣어지면 str = str + nextStr하고 nextSTr구해서 반복 start = start + str.length()
-                if(map.get(str) !=null){
-                    while(last < msg.length() && start < msg.length() && map.get(mapper) !=null){
-                        str +=msg.charAt(last);
-                        last++;
-                        nextStr = ""+msg.charAt(last);
-                        mapper +=nextStr;
-                    }
-                    map.put(mapper,index++);
-                    list.add(map.get(str));
-
-                    start+= str.length();
-                    last = start+1;
-                }
-            }}catch(Exception e){
-
+        int[] answer = new int[list.size()];
+        int index = 0;
+        for (int num : list) {
+            answer[index] = num;
+            index++;
         }
-        System.out.println(list);
-
 
         return answer;
+    }
+
+    private void LZW(HashMap<String, Integer> hashMap, ArrayList<Integer> list, String str) {
+
+        for (int i = 0; i < str.length(); i++) {
+            String subStr = str.substring(0, i + 1);
+            // 만약 사전에 없다면 사전에 등록하기 그리고 현재 문자 or 문자열 인덱스 값 출력,
+            // 현재 문자 or 문자열 다음의 문자에서 다시 시작
+            if (!hashMap.containsKey(subStr)) {
+                hashMap.put(subStr, hashMap.size() + 1);
+                list.add(hashMap.get(str.substring(0, i)));
+                LZW(hashMap, list, str.substring(i));
+                break;
+            } else {
+                if (i + 1 == str.length()) {
+                    // 만약 현재 문자가 마지막이라면 마지막 문자 인덱스 출력하기
+                    list.add(hashMap.get(str.substring(0, i + 1)));
+                }
+            }
+        }
     }
 }
