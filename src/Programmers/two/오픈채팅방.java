@@ -1,37 +1,44 @@
 import java.util.*;
+
 class Solution {
     public String[] solution(String[] record) {
-        String[] answer = {};
-        HashMap<String, String> map = new HashMap<>();
-        LinkedList<String> list = new LinkedList<>();
-        for(String rd : record){
-            String[] temp = rd.split(" ");
-            if(temp[0].equals("Enter")){
-                map.put(temp[1],temp[2]);
-                list.add(temp[1]+"|"+temp[2]+"님이 들어왔습니다.");
+        ArrayList<String> chatLog = new ArrayList<>();
+        HashMap<String, String> nickMap = new HashMap<>();
+
+        for(String log : record){
+            StringTokenizer st = new StringTokenizer(log);
+            String command = st.nextToken();
+            String userId = st.nextToken();
+            String nickname = "";
+
+            if(!command.equals("Leave")){
+                nickname = st.nextToken();
             }
-            else if(temp[0].equals("Leave")){
-                list.add(temp[1]+"|"+map.get(temp[1])+"님이 나갔습니다.");
-            }
-            else{
-                map.put(temp[1],temp[2]);
+
+            switch(command){
+                case "Enter":
+                    nickMap.put(userId, nickname);
+                    chatLog.add(userId + "님이 들어왔습니다.");
+                    break;
+                case "Leave":
+                    chatLog.add(userId + "님이 나갔습니다.");
+                    break;
+                case "Change":
+                    nickMap.put(userId, nickname);
+                    break;
             }
         }
-        //System.out.println(list);
-        //System.out.println(map);
-        answer = new String[list.size()];
-        int index =-1;
-        for(String info : list){
-            index++;
-            String[] temp = info.split("\\|");
-            if(!temp[1].split("님이")[0].equals(map.get(temp[0]))){
-                list.set(index, temp[0]+"|"+map.get(temp[0])+"님이 "+temp[1].split(" ")[1]);
-            }
+
+        String[] answer = new String[chatLog.size()];
+        int logIdx = 0;
+
+        for(String str : chatLog){
+            int endOfId = str.indexOf("님");
+            String userId = str.substring(0, endOfId);
+
+            answer[logIdx++] = str.replace(userId, nickMap.get(userId));
         }
-        index=0;
-        for(String info : list){
-            answer[index++]=info.split("\\|")[1];
-        }
+
         return answer;
     }
 }
