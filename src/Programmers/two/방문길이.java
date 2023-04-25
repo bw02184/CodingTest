@@ -1,31 +1,57 @@
+import java.util.*;
+
+/*
+그냥 3차원 배열 선언해서 to -> from 각각 다른 방향으로 true 표시해주기
+*/
+
 class Solution {
     public int solution(String dirs) {
         int answer = 0;
-        int[] dirY = {1,-1,0,0}; //UDRL
-        int[] dirX = {0,0,1,-1}; //UDRL
-        int maxUR=5, maxDL=-5;
-        int x=0,y=0;
-        boolean[][] visited = new boolean[maxUR*2][maxUR*2];
-        visited[5][5]=true;
-        for(String dir : dirs.split("")){
-            int d = -1;
-            if(dir.equals("U"))d=0;
-            else if(dir.equals("D"))d=1;
-            else if(dir.equals("R"))d=2;
-            else if(dir.equals("L"))d=3;
-            int nextX = x + dirX[d];
-            int nextY = y + dirY[d];
-            if(nextX>maxUR || nextX<maxDL || nextY>maxUR || nextY<maxDL)
-                continue;
-            int vX = nextX+maxUR;
-            int vY = nextY+maxUR;
-            System.out.println(nextY+" "+nextX+ " "+visited[vY][vX]);
+        int[] dx = {-1,0,0,1};
+        int[] dy = {0,-1,1,0};
 
-            if(!visited[vY][vX])answer++;
-            visited[vY][vX]=true;
-            x = nextX;
-            y = nextY;
+        boolean [][][] visited = new boolean[11][11][4];
+
+        int x = 5;
+        int y = 5;
+
+        for(int i = 0; i < dirs.length(); i++){
+            char in = dirs.charAt(i);
+            int dir = 0;
+
+            switch(in){
+                case 'L':
+                    dir = 0;
+                    break;
+                case 'U':
+                    dir = 1;
+                    break;
+                case 'D':
+                    dir = 2;
+                    break;
+                case 'R':
+                    dir = 3;
+                    break;
+                default:
+                    break;
+            }
+
+            int nx = x + dx[dir];
+            int ny = y + dy[dir];
+
+            if(nx<0||nx >=11||ny<0||ny>=11)continue;
+
+            //이 방향으로 들어온 적이 없다면
+            if (!visited[nx][ny][3-dir]&&!visited[x][y][dir]){
+                answer++;
+                visited[nx][ny][3-dir] = true;
+                visited[x][y][dir] = true;
+            }
+
+            x = nx;
+            y = ny;
         }
+
         return answer;
     }
 }
