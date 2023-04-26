@@ -1,36 +1,19 @@
 import java.util.*;
 
 class Solution {
-
-  final char[] WORDS = {'A', 'E', 'I', 'O', 'U'};
-  final int MAX_LENGTH = 5;
+  static LinkedList<String> list = new LinkedList<>();
 
   public int solution(String word) {
-    int answer = 0;
+    dfs("", 0);
 
-    List<String> elements = new ArrayList<>();
-
-    for (int i = 0; i < WORDS.length; i++) {
-      dfs(elements, String.valueOf(WORDS[i]));
-    }
-
-    for (int i = 0; i < elements.size(); i++) {
-      if (elements.get(i).equals(word)) {
-        answer = i + 1;
-        break;
-      }
-    }
-
-    return answer;
+    return list.indexOf(word);
   }
 
-  void dfs(List<String> elements, String str) {
-    if (str.length() > MAX_LENGTH) return;
-
-    if (!elements.contains(str)) elements.add(str);
-
-    for (int i = 0; i < WORDS.length; i++) {
-      dfs(elements, str + WORDS[i]);
+  public static void dfs(String str, int index) {
+    if (str.length() > 5) return;
+    list.add(str);
+    for (int i = 0; i < 5; i++) {
+      dfs(str + "AEIOU".charAt(i), index + 1);
     }
   }
 }
